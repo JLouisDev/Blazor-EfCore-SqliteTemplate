@@ -15,6 +15,6 @@ namespace Blazor_EfCore_SqliteTemplate.Data
 
         }
 
-        public DbSet<Car> ExampleEntities { get; set; }
+        public DbSet<Car> Cars { get; set; }
     }
 }
