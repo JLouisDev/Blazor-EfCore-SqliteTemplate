@@ -1,0 +1,32 @@
+﻿@page "/car/delete/{Id}"
+@inject ICarRepo carRepo
+@inject NavigationManager navigationManager
+
+<div class="container">
+    <h1>Are you sure you want to delete @EntityToDelete.Model?</h1>
+    <div class="d-inline-flex">
+        <button @onclick="@(() => Cancel())" class="btn btn-danger">Cancel</button>
+        <button @onclick="@(() => Confirm())" class="btn btn-success">Confirm Deletion</button>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    public Car EntityToDelete { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        EntityToDelete = await carRepo.GetCarByIdAsync(Id);
+    }
+
+    async Task Confirm()
+    {
+        await carRepo.DeleteCarAsync(EntityToDelete);
+        navigationManager.NavigateTo("/");
+    }
+
+    void Cancel()
+    {
+        navigationManager.NavigateTo("/");
+    }
+}

@@ -1,0 +1,60 @@
+﻿@page "/"
+@inject ICarRepo carRepo
+@inject NavigationManager navigationManager 
+
+<div>
+    <button @onclick="@(() => AddCar())" class="btn btn-success">Add Entity</button>
+</div>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Car Id</th>
+                <th scope="col">Manufacturer</th>
+                <th scope="col">Model</th>
+                <th scope="col">M. Year</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var car in CarsInDb)
+            {
+                <tr>
+                    <td scope="col">@car.Id</td>
+                    <td scope="col">@car.Manufacturer</td>
+                    <td scope="col">@car.Model</td>
+                    <td scope="col">@car.ModelYear</td>
+                    <td scope="col"><button @onclick="@(() => EditCar(car))" class="btn btn-warning">Edit</button></td>
+                    <td scope="col"><button @onclick="@(() => DeleteCar(car))" class="btn btn-danger">Delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code{
+    public List<Car> CarsInDb { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        CarsInDb = await carRepo.GetAllCarsAsListAsync();
+    }
+
+    private void AddCar()
+    {
+        navigationManager.NavigateTo("/car/add");
+    }
+
+    private void EditCar(Car c)
+    {
+        navigationManager.NavigateTo($"/car/edit/{c.Id}");
+    }
+
+    private void DeleteCar(Car c)
+    {
+        navigationManager.NavigateTo($"/car/delete/{c.Id}");
+    }
+
+}
+

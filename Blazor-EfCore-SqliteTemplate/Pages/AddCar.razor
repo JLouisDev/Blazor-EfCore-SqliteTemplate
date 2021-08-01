@@ -1,0 +1,50 @@
+﻿@page "/car/add"
+@inject NavigationManager navigationManager
+@inject ICarRepo carRepo 
+
+<h1>@Message</h1>
+<form>
+    <div class="form-row">
+        <div class="form-group">
+            <label class="col-form-label" for="car-manu">Manufacturer</label>
+            <input class="form-control" name="car-manu" type="text" @bind-value="@CarToAdd.Manufacturer" />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label class="col-form-label" for="car-model">Model</label>
+            <input class="form-control" name="car-model" type="text" @bind-value="@CarToAdd.Model" />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label class="col-form-label" for="car-my">Model Year</label>
+            <input class="form-control" name="car-my" type="text" @bind-value="@CarToAdd.ModelYear" />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            <label class="col-form-label" for="car-my">MSRP</label>
+            <input class="form-control" name="car-my" type="number" @bind-value="@CarToAdd.Msrp" />
+        </div>
+    </div>
+    <div class="form-row">
+        <button class="form-check btn btn-success" @onclick="@(async () => await Add())">Add Car</button> 
+    </div>
+</form>
+
+@code {
+
+    public Car CarToAdd { get; set; } = new();
+    public string Message { get; set; } = string.Empty;
+
+    public async Task Add()
+    {
+        var retCar = await carRepo.AddCarAsync(CarToAdd);
+        if (retCar is not null)
+            navigationManager.NavigateTo("/");
+        else
+            Message = "Error adding car.";
+    }
+
+}

@@ -1,0 +1,55 @@
+﻿@page "/car/edit/{Id}"
+@inject ICarRepo carRepo
+@inject NavigationManager navigationManager
+
+@if (CarToEdit != new Car())
+{
+    <form>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="col-form-label" for="car-manu">Manufacturer</label>
+                <input class="form-control" name="car-manu" type="text" @bind-value="@CarToEdit.Manufacturer" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="col-form-label" for="car-model">Model</label>
+                <input class="form-control" name="car-model" type="text" @bind-value="@CarToEdit.Model" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="col-form-label" for="car-my">Model Year</label>
+                <input class="form-control" name="car-my" type="text" @bind-value="@CarToEdit.ModelYear" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="col-form-label" for="car-my">MSRP</label>
+                <input class="form-control" name="car-my" type="number" @bind-value="@CarToEdit.Msrp" />
+            </div>
+        </div>
+        <div class="form-row">
+            <button class="form-check btn btn-success" @onclick="@(async () => await SubmitEdit())">Add Car</button>
+        </div>
+    </form>
+}
+
+@code {
+    [Parameter] public int Id { get; set; } = -1;
+    public Car CarToEdit { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(Id != -1)
+            CarToEdit = await carRepo.GetCarByIdAsync(Id);
+    }
+
+    async Task SubmitEdit()
+    {
+        await carRepo.EditCarAsync(CarToEdit);
+        navigationManager.NavigateTo("/");
+    }
+
+
+}
