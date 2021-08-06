@@ -17,23 +17,16 @@ namespace Blazor_EfCore_SqliteTemplate.Repository
             Db = context;
         }
 
-        public async Task<Car> AddCarAsync(Car car)
+        // Returns the number of records affected.
+        public async Task<int> AddCarAsync(Car car)
         {
-            var addedEntity = Db.Cars.Add(car);
-            if (await Db.SaveChangesAsync() == 1)
-                return addedEntity.Entity;
-            else
-                return new Car();
+            Db.Cars.Add(car);
+            return await Db.SaveChangesAsync();
         }
 
         public async Task<Car> GetCarByIdAsync(int id) 
         {
-            var entityQueried = await Db.Cars.Where(x => x.Id == id).FirstOrDefaultAsync();
-
-            if (entityQueried != null)
-                return entityQueried;
-            else
-                return new Car();
+            return await Db.Cars.Where(x => x.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<List<Car>> GetAllCarsAsListAsync() 
@@ -41,13 +34,10 @@ namespace Blazor_EfCore_SqliteTemplate.Repository
             return await Db.Cars.ToListAsync();
         }
 
-        public async Task<bool> EditCarAsync(Car entity)
+        public async Task<int> EditCarAsync(Car entity)
         {
             Db.Cars.Update(entity);
-            if (await Db.SaveChangesAsync() != 1)
-                return false;
-            else
-                return true;
+            return await Db.SaveChangesAsync();
         }
 
         public async Task<int> DeleteCarAsync(Car entity)
